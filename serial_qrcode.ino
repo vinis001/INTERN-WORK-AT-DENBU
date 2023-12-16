@@ -1,0 +1,43 @@
+unsigned int number[]={1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+bool isScale = true;
+
+void setup() {
+  Serial.begin(57600); 
+}
+
+void loop() {
+  if (Serial.available() > 0){
+    char command = Serial.read();
+    if (command == 'r') {
+      incrementNumber();
+      String label = isScale ? " scale" : " pipe";
+      isScale = !isScale; 
+      Serial.print("s:");
+      Serial.print(printNumber());
+      Serial.print(label);
+      Serial.println(":e");
+    }
+  }
+
+  delay(100); 
+}
+void incrementNumber() {
+  int i = 0;
+  while (i < 20) {
+    number[i]++;
+    if (number[i] > 9) {
+      number[i] = 0;
+      i++;
+    } else {
+      break;
+    }
+  }
+}
+String printNumber() {
+  String printedNumber = "";
+  for (int i = sizeof(number) / sizeof(number[0]) - 1; i >= 0; i--) {
+    //Serial.print(number[i]);
+    printedNumber += String(number[i]);
+  }
+  return printedNumber;
+}
